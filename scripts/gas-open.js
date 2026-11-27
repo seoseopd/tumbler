@@ -2,13 +2,13 @@ const { spawnSync } = require('node:child_process');
 
 const webAppUrl = process.env.GAS_WEBAPP_URL;
 if (!webAppUrl) {
-  console.error('.env\uC5D0 \uC6F9\uC571 \uC8FC\uC18C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uBA3C\uC800 npm.cmd run gas:deploy\uB97C \uC2E4\uD589\uD558\uC138\uC694.');
+  console.error('.env에 웹앱 주소가 없습니다. 먼저 npm.cmd run gas:deploy를 실행하세요.');
   process.exit(1);
 }
 
 const deploymentId = /^https:\/\/script\.google\.com\/macros\/s\/(AKfyc[A-Za-z0-9_-]+)\/exec(?:\?.*)?$/.exec(webAppUrl)?.[1];
 if (!deploymentId) {
-  console.error('\uAD6C\uAE00 \uAD8C\uD55C \uC2B9\uC778 \uCC3D\uC744 \uC5F4\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.');
+  console.error('Google 권한 승인 창을 열지 못했습니다.');
   process.exit(1);
 }
 
@@ -24,6 +24,6 @@ if (process.platform === 'win32') {
 }
 
 if (result.error || result.status !== 0) {
-  console.error('\uAD6C\uAE00 \uAD8C\uD55C \uC2B9\uC778 \uCC3D\uC744 \uC5F4\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.');
+  console.error('Google 권한 승인 창을 열지 못했습니다.');
   process.exitCode = 1;
 }

@@ -4,11 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>텀블러 공장 제조품질관리</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
       :root {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #19342d;
-        background: #f2f6f3;
+        --bg-body: #f8fafc;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --border-color: #e2e8f0;
+        --border-focus: #2563eb;
+        --primary-blue: #2563eb;
+        --primary-blue-hover: #1d4ed8;
+        --primary-blue-light: #eff6ff;
+        --primary-text: #0f172a;
+        --secondary-text: #475569;
+        --muted-text: #94a3b8;
+        --signal-ok: #10b981;
+        --signal-ok-bg: #ecfdf5;
+        --signal-ok-border: #a7f3d0;
+        --signal-ng: #ef4444;
+        --signal-ng-bg: #fef2f2;
+        --signal-ng-border: #fecaca;
+        --signal-hold: #f59e0b;
+        --signal-hold-bg: #fffbeb;
+        --signal-hold-border: #fde68a;
+        --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        /* Motion tokens from taste-skill */
+        --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
+        --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+        --duration-hover: 150ms;
+        --duration-press: 90ms;
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
@@ -16,19 +51,53 @@
         margin: 0;
         display: flex;
         flex-direction: column;
+        background-color: var(--bg-body);
+        color: var(--primary-text);
+        font-family: var(--font-sans);
+        font-size: 14.5px;
+        line-height: 1.6;
+        letter-spacing: -0.015em;
+        -webkit-font-smoothing: antialiased;
       }
 
+      /* Hero Entrance from taste-skill */
+      @keyframes tasteEnter {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .app-header, .page-content {
+        animation: tasteEnter 0.45s var(--ease-enter) forwards;
+      }
+
+      header, main, aside, footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Clean Modern White Header with Glassmorphism */
       .app-header {
-        min-height: 76px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        min-height: 64px;
         box-sizing: border-box;
         width: 100%;
-        padding: 12px 32px;
+        padding: 0 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 24px;
-        background: #fff;
-        border-bottom: 1px solid #d8e3dc;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
       }
 
       .brand-link,
@@ -40,39 +109,89 @@
 
       .brand-link {
         gap: 12px;
-        color: inherit;
-        font-size: 20px;
-        font-weight: 750;
+        color: var(--primary-text);
+        font-size: 17px;
+        font-weight: 700;
         text-decoration: none;
+        letter-spacing: -0.02em;
+        transition: transform var(--duration-hover) var(--ease-ui);
+      }
+
+      .brand-link:hover {
+        transform: translateY(-1px);
       }
 
       .brand-link img {
-        width: 44px;
-        height: 44px;
+        width: 34px;
+        height: 34px;
+        padding: 4px;
+        background: var(--primary-blue-light);
+        border: 1px solid #bfdbfe;
+        border-radius: var(--radius-sm);
+      }
+
+      .brand-link span {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
       .header-actions {
-        gap: 22px;
+        gap: 18px;
       }
 
       .header-actions nav {
-        gap: 20px;
+        gap: 12px;
       }
 
       .header-actions a {
-        color: #276447;
-        font-weight: 650;
+        color: var(--secondary-text);
+        font-weight: 600;
+        text-decoration: none;
+        padding: 7px 14px;
+        border-radius: var(--radius-sm);
+        transition: color var(--duration-hover) var(--ease-ui), background var(--duration-hover) var(--ease-ui);
+      }
+
+      .header-actions a:hover {
+        color: var(--primary-blue);
+        background: var(--primary-blue-light);
       }
 
       .header-user {
-        color: #40584d;
+        color: var(--secondary-text);
+        font-size: 13.5px;
+        font-weight: 500;
+        padding: 6px 12px;
+        background: #f1f5f9;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
         white-space: nowrap;
       }
 
       .logout-button {
         width: auto;
         margin: 0;
-        padding: 9px 14px;
+        padding: 7px 15px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--secondary-text);
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--duration-hover) var(--ease-ui);
+      }
+
+      .logout-button:hover {
+        color: #ef4444;
+        border-color: #fca5a5;
+        background: #fef2f2;
+        transform: translateY(-1px);
+      }
+
+      .logout-button:active {
+        transform: translateY(0);
       }
 
       .logout-button:disabled {
@@ -86,10 +205,13 @@
       .yellow-notice {
         box-sizing: border-box;
         width: 100%;
-        padding: 14px 32px;
-        color: #624b0b;
-        background: #fff3bf;
-        border-bottom: 1px solid #ead98a;
+        padding: 11px 24px;
+        color: #92400e;
+        background: #fef3c7;
+        border-bottom: 1px solid #fde68a;
+        font-size: 13.5px;
+        font-weight: 500;
+        text-align: center;
         line-height: 1.5;
       }
 
@@ -97,104 +219,140 @@
         flex: 1;
         width: 100%;
         box-sizing: border-box;
-        display: grid;
-        place-items: center;
-        padding: 32px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 36px 24px 60px;
       }
 
       .app-footer {
-        padding: 18px 24px;
-        color: #52665b;
+        padding: 20px 24px;
+        color: var(--muted-text);
+        font-size: 13px;
         text-align: center;
-        background: #fff;
-        border-top: 1px solid #d8e3dc;
+        background: #ffffff;
+        border-top: 1px solid var(--border-color);
       }
 
       .login-box {
-        width: min(100% - 40px, 420px);
+        width: min(100% - 32px, 440px);
         box-sizing: border-box;
-        padding: 36px;
-        border: 1px solid #d8e3dc;
-        border-radius: 18px;
-        background: #fff;
-        box-shadow: 0 12px 34px rgb(25 52 45 / 8%);
+        margin-top: 40px;
+        padding: 40px 36px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        background: #ffffff;
+        box-shadow: var(--shadow-lg);
       }
 
       h1 {
-        margin: 0 0 28px;
-        font-size: 28px;
+        margin: 0 0 20px;
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--primary-text);
+        letter-spacing: -0.02em;
         line-height: 1.35;
       }
 
       label {
         display: block;
-        margin: 18px 0 8px;
-        font-weight: 650;
+        margin: 18px 0 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--secondary-text);
+        letter-spacing: -0.01em;
       }
 
       input {
         box-sizing: border-box;
         width: 100%;
-        padding: 13px 14px;
-        border: 1px solid #b9c9c0;
-        border-radius: 9px;
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: var(--radius-sm);
         font: inherit;
+        font-size: 14px;
+        background: #ffffff;
+        color: var(--primary-text);
+        transition: border var(--duration-hover) var(--ease-ui), box-shadow var(--duration-hover) var(--ease-ui);
       }
 
       select,
       textarea {
         box-sizing: border-box;
         width: 100%;
-        padding: 13px 14px;
-        border: 1px solid #b9c9c0;
-        border-radius: 9px;
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: var(--radius-sm);
         font: inherit;
-        background: #fff;
+        font-size: 14px;
+        background: #ffffff;
+        color: var(--primary-text);
+        transition: border var(--duration-hover) var(--ease-ui), box-shadow var(--duration-hover) var(--ease-ui);
       }
 
-      textarea { min-height: 120px; resize: vertical; }
+      textarea { min-height: 110px; resize: vertical; }
 
       select:focus,
-      textarea:focus {
-        outline: 3px solid #b8d9c7;
-        border-color: #39785a;
-      }
-
+      textarea:focus,
       input:focus {
-        outline: 3px solid #b8d9c7;
-        border-color: #39785a;
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
       }
 
+      /* Buttons with taste-skill micro-interactions */
       button {
         width: 100%;
-        margin-top: 24px;
-        padding: 14px;
-        border: 0;
-        border-radius: 9px;
-        color: #fff;
-        background: #276447;
+        margin-top: 20px;
+        padding: 12px 20px;
+        border: 1px solid var(--primary-blue);
+        border-radius: var(--radius-sm);
+        color: #ffffff;
+        background: var(--primary-blue);
         font: inherit;
-        font-weight: 700;
+        font-weight: 600;
+        font-size: 14px;
         cursor: pointer;
+        transition: background var(--duration-hover) var(--ease-ui), border-color var(--duration-hover) var(--ease-ui), transform var(--duration-press) var(--ease-ui), box-shadow var(--duration-hover) var(--ease-ui);
+        letter-spacing: -0.01em;
+      }
+
+      button:hover {
+        background: var(--primary-blue-hover);
+        border-color: var(--primary-blue-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      button:active {
+        transform: translateY(1px);
       }
 
       button:disabled {
-        cursor: wait;
-        opacity: 0.7;
+        cursor: not-allowed;
+        opacity: 0.6;
+        border-color: #cbd5e1;
+        background: #e2e8f0;
+        color: var(--muted-text);
+        transform: none;
+        box-shadow: none;
       }
 
       .error-message {
-        margin: 16px 0 0;
-        color: #b42318;
+        margin: 12px 0 0;
+        color: var(--signal-ng);
+        font-size: 13px;
         font-weight: 600;
       }
 
       #app-screen {
-        width: min(100%, 920px);
+        width: min(100%, 1040px);
         box-sizing: border-box;
-        padding: 24px;
-        border-radius: 14px;
-        background: #fff;
+        padding: 32px 36px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        background: #ffffff;
+        box-shadow: var(--shadow-md);
       }
 
       #app-screen h1 { margin-bottom: 0; }
@@ -204,152 +362,335 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
       }
 
       .screen-heading button {
         width: auto;
         flex: 0 0 auto;
         margin: 0;
-        padding: 11px 18px;
+        padding: 9px 18px;
+        font-size: 13.5px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
       }
 
       .screen-view { margin-top: 24px; }
 
-      .home-date { max-width: 280px; }
+      .home-date { max-width: 260px; }
 
+      /* Summary Cards Grid */
       .home-summary-cards {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 22px;
+        gap: 16px;
+        margin-top: 20px;
       }
 
+      /* taste-skill card lift 2px */
       .home-summary-card {
         min-height: 96px;
         box-sizing: border-box;
-        padding: 18px;
-        border: 1px solid #d8e3dc;
-        border-radius: 12px;
-        background: #f8faf8;
+        padding: 16px 20px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: #f8fafc;
         color: inherit;
         font: inherit;
         text-align: left;
         cursor: pointer;
+        transition: transform var(--duration-hover) var(--ease-ui), border-color var(--duration-hover) var(--ease-ui), box-shadow var(--duration-hover) var(--ease-ui), background var(--duration-hover) var(--ease-ui);
+        box-shadow: var(--shadow-sm);
       }
 
-      .home-summary-card span { display: block; color: #52665b; font-weight: 650; }
+      .home-summary-card span {
+        display: block;
+        color: var(--secondary-text);
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
 
-      .home-summary-card strong { display: block; margin-top: 10px; font-size: 28px; }
+      .home-summary-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary-text);
+      }
 
-      .home-summary-card:hover { background: #edf5ef; }
+      .home-summary-card:hover {
+        border-color: #cbd5e1;
+        background: #ffffff;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .home-summary-card:active {
+        transform: translateY(0);
+      }
 
       .home-summary-card[aria-pressed="true"] {
-        border: 2px solid #276447;
-        background: #e1efe5;
+        border-color: var(--primary-blue);
+        background: var(--primary-blue-light);
       }
 
-      .home-inspection-list { display: grid; gap: 12px; margin-top: 20px; }
+      .home-summary-card[aria-pressed="true"] strong {
+        color: var(--primary-blue);
+      }
+
+      /* Inspection Card List with taste-skill card lift & image zoom 1.02 */
+      .home-inspection-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
 
       .home-inspection-card {
         display: grid;
-        grid-template-columns: 112px 1fr;
+        grid-template-columns: 110px 1fr;
         align-items: center;
-        gap: 16px;
+        gap: 18px;
         width: 100%;
         margin: 0;
-        padding: 12px;
-        border: 1px solid #d8e3dc;
-        color: #19342d;
-        background: #fff;
+        padding: 14px 18px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--primary-text);
+        background: #ffffff;
         text-align: left;
+        cursor: pointer;
+        transition: transform var(--duration-hover) var(--ease-ui), border-color var(--duration-hover) var(--ease-ui), box-shadow var(--duration-hover) var(--ease-ui), background var(--duration-hover) var(--ease-ui);
+        box-shadow: var(--shadow-sm);
       }
 
-      .home-inspection-card:hover { background: #f2f6f3; }
+      .home-inspection-card:hover {
+        border-color: #93c5fd;
+        background: #f8fafc;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .home-inspection-card:active {
+        transform: translateY(0);
+      }
 
       .home-inspection-card img,
       .home-inspection-card .no-photo {
         display: grid;
-        width: 112px;
-        height: 88px;
+        width: 110px;
+        height: 82px;
         place-items: center;
         object-fit: cover;
-        border-radius: 8px;
-        background: #edf2ee;
+        border-radius: var(--radius-sm);
+        border: 1px solid #e2e8f0;
+        background: #f1f5f9;
+        font-size: 12px;
+        color: var(--muted-text);
+        transition: transform var(--duration-hover) var(--ease-ui);
       }
 
-      .home-inspection-details { display: grid; gap: 5px; }
+      .home-inspection-card:hover img {
+        transform: scale(1.02);
+      }
 
-      .home-inspection-details strong { overflow-wrap: anywhere; }
+      .home-inspection-details { display: grid; gap: 4px; }
 
-      .home-list-message { margin: 18px 0 0; color: #52665b; }
+      .home-inspection-details strong {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--primary-blue);
+        overflow-wrap: anywhere;
+      }
+
+      .home-inspection-details span {
+        font-size: 13.5px;
+        color: var(--secondary-text);
+      }
+
+      .home-list-message {
+        margin: 28px 0;
+        color: var(--muted-text);
+        text-align: center;
+        font-size: 14px;
+      }
 
       @media (max-width: 700px) {
         .home-summary-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
 
       .inspection-fields {
-        max-width: 620px;
+        max-width: 640px;
       }
 
       .weight-range {
-        margin: 12px 0 0;
-        padding: 12px 14px;
-        border-radius: 8px;
-        color: #315b45;
-        background: #edf5ef;
-        font-weight: 650;
+        margin: 10px 0 0;
+        padding: 9px 14px;
+        border-radius: var(--radius-sm);
+        color: #1e40af;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        font-size: 13px;
+        font-weight: 500;
       }
 
       .image-previews {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 12px;
+        gap: 12px;
+        margin-top: 14px;
       }
 
       .image-previews img {
-        width: 92px;
-        height: 92px;
+        width: 88px;
+        height: 88px;
         object-fit: cover;
-        border: 1px solid #d8e3dc;
-        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        transition: transform var(--duration-hover) var(--ease-ui);
+      }
+
+      .image-previews img:hover {
+        transform: scale(1.04);
       }
 
       .inspection-summary {
         display: grid;
-        gap: 8px;
+        gap: 6px;
         margin-bottom: 24px;
+        padding: 16px 20px;
+        background: #f8fafc;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
       }
 
-      .inspection-summary p { margin: 0; }
+      .inspection-summary p { margin: 0; font-size: 13.5px; color: var(--secondary-text); }
+      .inspection-summary strong { color: var(--primary-text); font-weight: 600; }
 
       .inspection-tabs {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        border-bottom: 1px solid #d8e3dc;
+        gap: 6px;
+        border-bottom: 2px solid #e2e8f0;
       }
 
       .inspection-tabs button {
         width: auto;
         margin: 0;
-        padding: 12px 14px;
-        border-radius: 8px 8px 0 0;
-        color: #40584d;
-        background: #edf2ee;
+        padding: 11px 18px;
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        border: none;
+        color: var(--secondary-text);
+        background: transparent;
+        font-size: 13.5px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        position: relative;
+        bottom: -2px;
+        transition: all var(--duration-hover) var(--ease-ui);
+      }
+
+      .inspection-tabs button:hover {
+        color: var(--primary-text);
+        background: #f1f5f9;
+        transform: none;
+        box-shadow: none;
       }
 
       .inspection-tabs button[aria-selected="true"] {
-        color: #fff;
-        background: #276447;
+        color: var(--primary-blue);
+        background: #ffffff;
+        border-bottom: 2px solid var(--primary-blue);
+        font-weight: 700;
       }
 
-      .inspection-tab-panel { min-height: 48px; padding-top: 18px; }
+      .inspection-tab-panel { min-height: 48px; padding-top: 24px; }
+
+      .judgment-section { display: grid; gap: 20px; }
+
+      .judgment-section h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--primary-text); }
+
+      .judgment-group { margin: 0; padding: 0; border: 0; }
+
+      .judgment-group legend { margin-bottom: 10px; font-weight: 600; font-size: 13px; color: var(--secondary-text); }
+
+      .judgment-options { display: flex; flex-wrap: wrap; gap: 10px; }
+
+      .judgment-options button {
+        width: auto;
+        margin: 0;
+        padding: 9px 18px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        color: var(--secondary-text);
+        background: #f8fafc;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--duration-hover) var(--ease-ui);
+      }
+
+      .judgment-options button:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+      }
+
+      .judgment-options button[aria-pressed="true"] { color: #ffffff; font-weight: 700; }
+
+      .judgment-options button[data-judgment="OK"][aria-pressed="true"] {
+        border-color: var(--signal-ok);
+        background: var(--signal-ok);
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);
+      }
+
+      .judgment-options button[data-judgment="NG"][aria-pressed="true"] {
+        border-color: var(--signal-ng);
+        background: var(--signal-ng);
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);
+      }
+
+      .judgment-options button[data-judgment="HOLD"][aria-pressed="true"] {
+        border-color: var(--signal-hold);
+        background: var(--signal-hold);
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.25);
+      }
+
+      .judgment-options button[data-defect][aria-pressed="true"] {
+        border-color: var(--primary-blue);
+        color: #ffffff;
+        background: var(--primary-blue);
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+      }
+
+      .detail-record-history { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color); }
+
+      .detail-record-history summary {
+        color: var(--primary-blue);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .detail-record-history ol { display: grid; gap: 8px; padding-left: 20px; margin-top: 12px; }
+
+      .detail-record-history li {
+        padding: 10px 14px;
+        border-radius: var(--radius-sm);
+        background: #f8fafc;
+        border: 1px solid var(--border-color);
+        font-size: 13px;
+        color: var(--secondary-text);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
 
       .inspection-detail-grid {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-        gap: 28px;
+        gap: 24px;
       }
 
       .detail-main-image {
@@ -358,9 +699,9 @@
         aspect-ratio: 4 / 3;
         place-items: center;
         overflow: hidden;
-        border: 1px solid #d8e3dc;
-        border-radius: 10px;
-        background: #f2f6f3;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: #f8fafc;
       }
 
       .detail-main-image img {
@@ -377,82 +718,129 @@
       }
 
       .detail-thumbnails button {
-        width: 68px;
-        height: 68px;
+        width: 64px;
+        height: 64px;
         margin: 0;
-        padding: 3px;
-        overflow: hidden;
-        border: 2px solid transparent;
-        background: #fff;
+        padding: 2px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        background: #f8fafc;
+        cursor: pointer;
+        transition: all var(--duration-hover) var(--ease-ui);
       }
 
-      .detail-thumbnails button[aria-current="true"] { border-color: #276447; }
+      .detail-thumbnails button:hover {
+        border-color: #94a3b8;
+      }
+
+      .detail-thumbnails button[aria-current="true"] {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      }
 
       .detail-thumbnails img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 5px;
+        border-radius: 4px;
       }
 
-      .detail-values { display: grid; gap: 10px; margin: 0; }
+      .detail-values { display: grid; gap: 10px; margin: 0; font-size: 13.5px; }
 
-      .detail-values div { display: grid; grid-template-columns: 100px 1fr; gap: 8px; }
+      .detail-values div { display: grid; grid-template-columns: 100px 1fr; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
 
-      .detail-values dt { color: #52665b; font-weight: 650; }
+      .detail-values dt { color: var(--secondary-text); font-weight: 500; }
 
-      .detail-values dd { margin: 0; overflow-wrap: anywhere; }
+      .detail-values dd { margin: 0; color: var(--primary-text); font-weight: 600; overflow-wrap: anywhere; }
 
-      .detail-edit { margin-top: 24px; padding-top: 18px; border-top: 1px solid #d8e3dc; }
+      .detail-edit { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); }
 
-      .detail-edit button { margin-top: 18px; }
+      .detail-edit button { margin-top: 16px; }
 
       .gemini-result { display: grid; gap: 14px; }
 
       .gemini-result-heading { display: flex; align-items: center; gap: 12px; }
 
-      .gemini-result-heading h3 { margin: 0; }
+      .gemini-result-heading h3 { margin: 0; font-size: 16px; font-weight: 700; color: var(--primary-text); }
 
-      .gemini-result-badge { padding: 5px 10px; border-radius: 999px; color: #315b45; background: #edf5ef; font-size: 14px; font-weight: 750; }
+      .gemini-result-badge {
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary-blue);
+        background: var(--primary-blue-light);
+        border: 1px solid #bfdbfe;
+      }
 
-      .gemini-result button { width: fit-content; margin: 0; padding: 10px 16px; }
+      .gemini-result-badge.review-needed {
+        color: #b45309;
+        background: #fef3c7;
+        border-color: #fde68a;
+      }
 
-      .gemini-run-controls { display: grid; grid-template-columns: minmax(140px, 0.7fr) minmax(220px, 1.4fr) auto; align-items: end; gap: 12px; }
+      .gemini-result button { width: fit-content; margin: 0; padding: 9px 18px; font-size: 13px; font-weight: 600; }
+
+      .evidence-review { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+
+      .evidence-review h3 { margin-top: 0; font-size: 15px; font-weight: 700; color: var(--primary-text); }
+
+      .evidence-review .evidence-check { display: flex; align-items: center; gap: 9px; margin: 12px 0; }
+
+      .evidence-review .evidence-check input { width: auto; margin: 0; }
+
+      .evidence-review button { margin-top: 12px; }
+
+      .gemini-run-controls {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.7fr) minmax(200px, 1.4fr) auto;
+        align-items: end;
+        gap: 12px;
+      }
 
       .gemini-run-controls label { margin-top: 0; }
 
       .gemini-result-fields { display: grid; gap: 12px; margin: 0; }
 
-      .gemini-result-fields div { padding: 14px; border: 1px solid #d8e3dc; border-radius: 10px; background: #fbfcfb; }
+      .gemini-result-fields div {
+        padding: 14px 18px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: #f8fafc;
+      }
 
-      .gemini-result-fields dt { margin-bottom: 6px; color: #52665b; font-weight: 700; }
+      .gemini-result-fields dt { margin-bottom: 6px; color: var(--secondary-text); font-size: 12.5px; font-weight: 600; text-transform: uppercase; }
 
-      .gemini-result-fields dd { margin: 0; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .gemini-result-fields dd { margin: 0; font-size: 14px; line-height: 1.6; color: var(--primary-text); white-space: pre-wrap; overflow-wrap: anywhere; }
 
-      .gemini-result-fields .gemini-decision dd { font-size: 24px; font-weight: 800; }
+      .gemini-result-fields .gemini-decision dd { font-size: 22px; font-weight: 800; color: var(--primary-blue); }
 
-      .gemini-details-card dl { display: grid; gap: 12px; margin: 0; }
+      .gemini-result-message { margin: 0; color: var(--muted-text); font-size: 13px; }
 
-      .gemini-details-card .detail-item { padding: 0; border: none; background: transparent; }
+      .gemini-comparison { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: grid; gap: 14px; }
 
-      .gemini-result-message { margin: 0; color: #52665b; }
+      .gemini-comparison h3 { margin: 0; font-size: 16px; font-weight: 700; color: var(--primary-text); }
 
-      .gemini-comparison { display: grid; gap: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #d8e3dc; }
+      .gemini-comparison-selectors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
-      .gemini-comparison h3 { margin: 0; }
+      .gemini-comparison-table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
 
-      .gemini-comparison-selectors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-
-      .gemini-comparison-table-wrap { overflow-x: auto; }
-
-      .gemini-comparison-table { width: 100%; min-width: 600px; border-collapse: collapse; }
+      .gemini-comparison-table { width: 100%; min-width: 580px; border-collapse: collapse; }
 
       .gemini-comparison-table th,
-      .gemini-comparison-table td { padding: 12px; border: 1px solid #d8e3dc; text-align: left; vertical-align: top; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .gemini-comparison-table td {
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        text-align: left;
+        vertical-align: top;
+        font-size: 13px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
 
-      .gemini-comparison-table thead th { background: #edf5ef; }
+      .gemini-comparison-table thead th { background: #f8fafc; color: var(--primary-text); font-weight: 700; }
 
-      .gemini-comparison-table tbody th { width: 150px; color: #52665b; background: #fbfcfb; }
+      .gemini-comparison-table tbody th { width: 130px; color: var(--secondary-text); background: #ffffff; font-weight: 600; }
 
       @media (max-width: 680px) {
         .inspection-detail-grid { grid-template-columns: 1fr; }
@@ -460,19 +848,19 @@
 
       .inspection-detail-error {
         margin: 0;
-        color: #b42318;
+        color: var(--signal-ng);
         font-weight: 600;
       }
 
-      #not-found-view p { margin: 0 0 18px; }
+      #not-found-view p { margin: 0 0 16px; }
 
       #not-found-view a {
         display: inline-block;
-        padding: 10px 16px;
-        border-radius: 8px;
-        color: #fff;
-        background: #276447;
-        font-weight: 700;
+        padding: 10px 18px;
+        border-radius: var(--radius-sm);
+        color: #ffffff;
+        background: var(--primary-blue);
+        font-weight: 600;
         text-decoration: none;
       }
 
@@ -549,6 +937,15 @@
             <textarea id="prompt-text" rows="12" disabled></textarea>
             <button id="save-prompt" type="button" disabled>수정본 저장</button>
             <p id="prompt-message" role="status" aria-live="polite"></p>
+          </div>
+          <div class="prompt-settings">
+            <h2>NotebookLM 근거 질문</h2>
+            <label for="notebooklm-prompt-version">버전</label>
+            <select id="notebooklm-prompt-version" disabled></select>
+            <label for="notebooklm-prompt-text">근거 질문</label>
+            <textarea id="notebooklm-prompt-text" rows="12" disabled></textarea>
+            <button id="save-notebooklm-prompt" type="button" disabled>수정본 저장</button>
+            <p id="notebooklm-prompt-message" role="status" aria-live="polite"></p>
           </div>
         </section>
         <section id="inspection-new-view" class="screen-view" hidden>
@@ -659,8 +1056,75 @@
                   <div id="detail-gemini-comparison-output" class="gemini-comparison-table-wrap"></div>
                 </section>
               </section>
-              <p id="detail-placeholder" hidden></p>
+              <section id="detail-evidence-reference" class="evidence-reference" hidden aria-labelledby="detail-evidence-title">
+                <h2 id="detail-evidence-title">검사기준과 비교하기</h2>
+                <details id="detail-standard-source">
+                  <summary id="detail-standard-summary">검사기준 원문 읽기 · Rev.A</summary>
+                  <pre id="detail-standard-text" aria-live="polite"></pre>
+                </details>
+                <label for="detail-evidence-prompt">NotebookLM 근거 질문</label>
+                <select id="detail-evidence-prompt">
+                  <option value="v3">v3</option>
+                </select>
+                <button id="detail-evidence-request" type="button">근거 확인</button>
+                <p id="detail-evidence-guidance" class="gemini-result-message" role="status" aria-live="polite"></p>
+                <section id="detail-evidence-answer" class="gemini-result" hidden aria-label="NotebookLM 근거 답변">
+                  <p id="detail-evidence-mock" class="weight-range" hidden>모의 응답 — 실제 NotebookLM 연결 아님</p>
+                  <pre id="detail-evidence-answer-text"></pre>
+                  <p id="detail-evidence-sources"></p>
+                  <details id="detail-evidence-sent-question" hidden>
+                    <summary>NotebookLM에 보낸 질문 보기</summary>
+                    <pre id="detail-evidence-sent-question-text"></pre>
+                    <p id="detail-evidence-prompt-used"></p>
+                  </details>
+                  <section id="detail-evidence-review" class="evidence-review" hidden aria-label="출처 대조">
+                    <h3>기준 원문과 답변이 일치하나요?</h3>
+                    <p>원문을 열어 문서명·버전·내용을 답변과 비교하세요. 일치할 때만 아래 항목에 체크합니다.</p>
+                    <label class="evidence-check"><input id="detail-evidence-read-match" type="checkbox" /> 원문을 읽었고 답변과 일치합니다</label>
+                    <label class="evidence-check"><input id="detail-evidence-review-needed" type="checkbox" /> AI 판정이 이 기준과 맞지 않습니다(검토 필요)</label>
+                    <label for="detail-evidence-review-memo">메모</label>
+                    <input id="detail-evidence-review-memo" type="text" />
+                    <button id="detail-evidence-review-save" type="button" disabled>출처 대조 기록 저장</button>
+                    <p id="detail-evidence-review-error" class="error-message" role="alert" hidden></p>
+                  </section>
+                </section>
+              </section>
+              <section id="detail-judgment" class="judgment-section" hidden aria-labelledby="detail-judgment-title">
+                <h2 id="detail-judgment-title">내 판단 기록</h2>
+                <fieldset class="judgment-group">
+                  <legend>판정</legend>
+                  <div class="judgment-options" aria-label="판정 선택">
+                    <button type="button" data-judgment="OK" aria-pressed="false">정상 OK</button>
+                    <button type="button" data-judgment="NG" aria-pressed="false">불량 NG</button>
+                    <button type="button" data-judgment="HOLD" aria-pressed="false">보류 HOLD</button>
+                  </div>
+                </fieldset>
+                <fieldset class="judgment-group">
+                  <legend>불량</legend>
+                  <div class="judgment-options" aria-label="불량 선택">
+                    <button type="button" data-defect="D01" aria-pressed="false">스크래치</button>
+                    <button type="button" data-defect="D02" aria-pressed="false">찍힘</button>
+                    <button type="button" data-defect="D03" aria-pressed="false">라벨 오류</button>
+                    <button type="button" data-defect="D04" aria-pressed="false">뚜껑 조립 오류</button>
+                  </div>
+                </fieldset>
+                <div>
+                  <label for="detail-judgment-memo">조치 메모</label>
+                  <textarea id="detail-judgment-memo"></textarea>
+                  <label for="detail-judgment-change-reason">변경 사유</label>
+                  <input id="detail-judgment-change-reason" type="text" />
+                </div>
+                <div>
+                  <button id="detail-judgment-save" type="button">내 판단 저장</button>
+                  <p id="detail-judgment-save-error" class="error-message" role="alert" hidden></p>
+                </div>
+              </section>
             </div>
+            <details id="detail-record-history" class="detail-record-history">
+              <summary>변경 이력</summary>
+              <p id="detail-record-history-error" class="error-message" role="alert" hidden></p>
+              <ol id="detail-record-history-list"></ol>
+            </details>
           </div>
         </section>
         <section id="not-found-view" hidden>
@@ -693,8 +1157,13 @@
       const promptText = document.querySelector('#prompt-text');
       const savePromptButton = document.querySelector('#save-prompt');
       const promptMessage = document.querySelector('#prompt-message');
+      const notebookLMPromptVersion = document.querySelector('#notebooklm-prompt-version');
+      const notebookLMPromptText = document.querySelector('#notebooklm-prompt-text');
+      const saveNotebookLMPromptButton = document.querySelector('#save-notebooklm-prompt');
+      const notebookLMPromptMessage = document.querySelector('#notebooklm-prompt-message');
       let storageStatusRequestId = 0;
       let promptRecords = [];
+      let notebookLMPromptRecords = [];
       const homeDate = document.querySelector('#home-date');
       const homeSummaryError = document.querySelector('#home-summary-error');
       const homeListError = document.querySelector('#home-list-error');
@@ -721,7 +1190,36 @@
       const detailGeminiCompareLeft = document.querySelector('#detail-gemini-compare-left');
       const detailGeminiCompareRight = document.querySelector('#detail-gemini-compare-right');
       const detailGeminiComparisonOutput = document.querySelector('#detail-gemini-comparison-output');
-      const detailPlaceholder = document.querySelector('#detail-placeholder');
+      const detailEvidenceReference = document.querySelector('#detail-evidence-reference');
+      const detailStandardSource = document.querySelector('#detail-standard-source');
+      const detailStandardSummary = document.querySelector('#detail-standard-summary');
+      const detailStandardText = document.querySelector('#detail-standard-text');
+      const detailEvidencePrompt = document.querySelector('#detail-evidence-prompt');
+      const detailEvidenceRequest = document.querySelector('#detail-evidence-request');
+      const detailEvidenceGuidance = document.querySelector('#detail-evidence-guidance');
+      const detailEvidenceAnswer = document.querySelector('#detail-evidence-answer');
+      const detailEvidenceMock = document.querySelector('#detail-evidence-mock');
+      const detailEvidenceAnswerText = document.querySelector('#detail-evidence-answer-text');
+      const detailEvidenceSources = document.querySelector('#detail-evidence-sources');
+      const detailEvidenceSentQuestion = document.querySelector('#detail-evidence-sent-question');
+      const detailEvidenceSentQuestionText = document.querySelector('#detail-evidence-sent-question-text');
+      const detailEvidencePromptUsed = document.querySelector('#detail-evidence-prompt-used');
+      const detailEvidenceReview = document.querySelector('#detail-evidence-review');
+      const detailEvidenceReadMatch = document.querySelector('#detail-evidence-read-match');
+      const detailEvidenceReviewNeeded = document.querySelector('#detail-evidence-review-needed');
+      const detailEvidenceReviewMemo = document.querySelector('#detail-evidence-review-memo');
+      const detailEvidenceReviewSave = document.querySelector('#detail-evidence-review-save');
+      const detailEvidenceReviewError = document.querySelector('#detail-evidence-review-error');
+      const detailJudgment = document.querySelector('#detail-judgment');
+      const detailJudgmentMemo = document.querySelector('#detail-judgment-memo');
+      const detailJudgmentChangeReason = document.querySelector('#detail-judgment-change-reason');
+      const detailJudgmentSave = document.querySelector('#detail-judgment-save');
+      const detailJudgmentSaveError = document.querySelector('#detail-judgment-save-error');
+      const detailRecordHistory = document.querySelector('#detail-record-history');
+      const detailRecordHistoryList = document.querySelector('#detail-record-history-list');
+      const detailRecordHistoryError = document.querySelector('#detail-record-history-error');
+      const judgmentDecisionButtons = [...document.querySelectorAll('[data-judgment]')];
+      const judgmentDefectButtons = [...document.querySelectorAll('[data-defect]')];
       const detailMainImage = document.querySelector('#detail-main-image');
       const detailThumbnails = document.querySelector('#detail-thumbnails');
       const detailEditForm = document.querySelector('#detail-edit-form');
@@ -743,13 +1241,18 @@
       let activeDetailImages = [];
       let activeDetailInspectionId = '';
       let activeDetailRevision = 'Rev.A';
+      let detailRecordHistoryRequestId = 0;
+      let selectedJudgment = null;
+      const selectedDefects = new Set();
       let detailPromptRecords = [];
       let detailPromptOptionsInspectionId = '';
       let detailPromptOptionsRequestId = 0;
       let detailGeminiOptionsReady = false;
       let detailGeminiComparisonResultIds = '';
-      let detailGeminiComparisonResults = [];
       let geminiResultRequestId = 0;
+      let evidenceReferenceRequestId = 0;
+      let evidencePromptRecords = [];
+      let evidenceLinkSaved = false;
       let geminiPollTimer = null;
 
       function readImageAsDataUrl(file) {
@@ -954,6 +1457,63 @@
         }
       });
 
+      async function loadNotebookLMPrompts(selectedName) {
+        notebookLMPromptMessage.textContent = '';
+        try {
+          const response = await fetch('/api/prompts?kind=notebooklm');
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'NotebookLM 근거 질문을 불러오지 못했습니다.');
+          if (window.location.pathname !== '/settings') return;
+          notebookLMPromptRecords = result.prompts;
+          notebookLMPromptVersion.replaceChildren(...notebookLMPromptRecords.map((prompt) => {
+            const option = document.createElement('option');
+            option.value = prompt.name;
+            option.textContent = prompt.name;
+            return option;
+          }));
+          notebookLMPromptVersion.value = selectedName || result.default;
+          showSelectedNotebookLMPrompt();
+          notebookLMPromptVersion.disabled = false;
+          notebookLMPromptText.disabled = false;
+          saveNotebookLMPromptButton.disabled = false;
+        } catch (error) {
+          notebookLMPromptMessage.textContent = error.message || 'NotebookLM 근거 질문을 불러오지 못했습니다.';
+        }
+      }
+
+      function showSelectedNotebookLMPrompt() {
+        const selected = notebookLMPromptRecords.find((prompt) => prompt.name === notebookLMPromptVersion.value);
+        notebookLMPromptText.value = selected?.text || '';
+      }
+
+      notebookLMPromptVersion.addEventListener('change', showSelectedNotebookLMPrompt);
+
+      saveNotebookLMPromptButton.addEventListener('click', async () => {
+        const selected = notebookLMPromptRecords.find((prompt) => prompt.name === notebookLMPromptVersion.value);
+        const base = selected?.name.match(/^v[1-3]/)?.[0];
+        if (!base) {
+          notebookLMPromptMessage.textContent = '저장할 근거 질문 버전을 확인하세요.';
+          return;
+        }
+        saveNotebookLMPromptButton.disabled = true;
+        notebookLMPromptMessage.textContent = '수정본을 저장하고 있습니다.';
+        try {
+          const response = await fetch('/api/prompts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ base, text: notebookLMPromptText.value, kind: 'notebooklm' }),
+          });
+          const saved = await response.json();
+          if (!response.ok) throw new Error(saved.error || '근거 질문 수정본을 저장하지 못했습니다.');
+          await loadNotebookLMPrompts(saved.name);
+          notebookLMPromptMessage.textContent = '수정본을 저장했습니다.';
+        } catch (error) {
+          notebookLMPromptMessage.textContent = error.message || '근거 질문 수정본을 저장하지 못했습니다.';
+        } finally {
+          saveNotebookLMPromptButton.disabled = false;
+        }
+      });
+
       async function loadHomeInspections() {
         const requestId = ++homeListRequestId;
         homeListError.hidden = true;
@@ -1081,6 +1641,7 @@
           if (window.location.pathname !== route) return;
           activeDetailInspectionId = inspection.inspection_id;
           activeDetailRevision = inspection.revision;
+          void loadInspectionRecordHistory(inspection.inspection_id);
           if (detailPromptOptionsInspectionId !== inspection.inspection_id) {
             detailPromptOptionsInspectionId = inspection.inspection_id;
             detailGeminiOptionsReady = false;
@@ -1105,12 +1666,17 @@
           document.querySelector('#detail-value-revision').textContent = inspection.revision;
           document.querySelector('#detail-value-weight').textContent = inspection.weight_g === null ? '미측정' : `${inspection.weight_g}g`;
           document.querySelector('#detail-value-memo').textContent = inspection.memo || '없음';
+          detailJudgmentMemo.value = inspection.memo || '';
+          detailJudgmentChangeReason.value = '담당자 대조 판정 기록';
+          detailJudgmentSaveError.hidden = true;
           populateDetailProductOptions(inspection.product_id);
           document.querySelector('#detail-edit-date').value = inspection.inspected_at.replace(' ', 'T');
           document.querySelector('#detail-edit-weight').value = inspection.weight_g ?? '';
           detailEditError.hidden = true;
           renderDetailImages(Array.isArray(inspection.images) ? inspection.images : []);
-          selectDetailTab(new URLSearchParams(window.location.search).get('tab') === '2' ? 1 : 0, false);
+          renderJudgmentSelection(inspection);
+          const requestedTab = new URLSearchParams(window.location.search).get('tab');
+          selectDetailTab(requestedTab === '2' ? 1 : requestedTab === '4' ? 3 : 0, false);
           inspectionDetailContent.hidden = false;
         } catch (error) {
           if (window.location.pathname !== route) return;
@@ -1126,10 +1692,12 @@
         detailPanel.setAttribute('aria-labelledby', detailTabs[index].id);
         detailPhotoMeasurement.hidden = index !== 0;
         detailGeminiResult.hidden = index !== 1;
-        detailPlaceholder.hidden = index < 2;
-        detailPlaceholder.textContent = index < 2 ? '' : '이 탭은 나중 회차에서 만듭니다.';
+        detailEvidenceReference.hidden = index !== 2;
+        detailJudgment.hidden = index !== 3;
         if (index === 1 && activeDetailInspectionId) {
           void loadGeminiResult(activeDetailInspectionId);
+        } else if (index === 2 && activeDetailInspectionId) {
+          void loadEvidenceReference(activeDetailInspectionId);
         } else {
           geminiResultRequestId += 1;
           clearTimeout(geminiPollTimer);
@@ -1138,9 +1706,200 @@
         if (updateAddress) {
           const query = new URLSearchParams(window.location.search);
           if (index === 1) query.set('tab', '2');
+          else if (index === 3) query.set('tab', '4');
           else query.delete('tab');
           const search = query.toString();
           history.replaceState({}, '', `${window.location.pathname}${search ? `?${search}` : ''}`);
+        }
+      }
+
+      async function loadInspectionRecordHistory(inspectionId) {
+        const requestId = ++detailRecordHistoryRequestId;
+        detailRecordHistory.open = false;
+        detailRecordHistoryList.replaceChildren();
+        detailRecordHistoryError.hidden = true;
+        try {
+          const response = await fetch(`/api/inspections/${encodeURIComponent(inspectionId)}/records`);
+          const records = await response.json();
+          if (!response.ok) throw new Error(records.error || '변경 이력을 불러오지 못했습니다.');
+          if (requestId !== detailRecordHistoryRequestId || activeDetailInspectionId !== inspectionId) return;
+          records.forEach((record) => {
+            const item = document.createElement('li');
+            const weight = record.weight_g === null ? '미측정' : `${record.weight_g}g`;
+            item.textContent = `${record.recorded_at} · 기록 버전 ${record.content_version} · 판정 ${record.decision} · 중량 ${weight} · 저장한 사람 ${record.user_id} · 변경 사유 ${record.change_reason}`;
+            detailRecordHistoryList.append(item);
+          });
+        } catch (error) {
+          if (requestId !== detailRecordHistoryRequestId || activeDetailInspectionId !== inspectionId) return;
+          detailRecordHistoryError.textContent = error.message || '변경 이력을 불러오지 못했습니다.';
+          detailRecordHistoryError.hidden = false;
+          detailRecordHistory.open = true;
+        }
+      }
+
+      async function loadEvidenceReference(inspectionId) {
+        const requestId = ++evidenceReferenceRequestId;
+        detailStandardSource.open = false;
+        detailStandardText.textContent = '검사기준 원문을 불러오는 중입니다.';
+        detailStandardSummary.textContent = '검사기준 원문 읽기 · 불러오는 중';
+        detailEvidenceRequest.disabled = false;
+        detailEvidenceGuidance.textContent = '';
+        detailEvidenceAnswer.hidden = true;
+        try {
+          const statusResponse = await fetch(`/api/inspections/${encodeURIComponent(inspectionId)}/evidence`);
+          const status = await statusResponse.json();
+          if (!statusResponse.ok) throw new Error('서버에서 오류가 발생했습니다.');
+          if (requestId !== evidenceReferenceRequestId || activeDetailInspectionId !== inspectionId) return;
+          const revision = status.revision;
+          detailStandardSummary.textContent = `검사기준 원문 읽기 · ${revision}`;
+          const textResponse = await fetch(`/api/standards/${encodeURIComponent(revision)}/text`);
+          const standard = await textResponse.json();
+          if (!textResponse.ok) throw new Error(standard.error || '서버에서 오류가 발생했습니다.');
+          if (requestId !== evidenceReferenceRequestId || activeDetailInspectionId !== inspectionId) return;
+          detailStandardText.textContent = standard.text;
+          await loadEvidencePrompts(inspectionId, status.query?.prompt_name || 'v3');
+          if (requestId !== evidenceReferenceRequestId || activeDetailInspectionId !== inspectionId) return;
+          if (status.query) renderEvidenceAnswer(status.query, status.link);
+          if (status.mode === 'off') {
+            detailEvidenceRequest.disabled = true;
+            detailEvidenceGuidance.textContent = 'NotebookLM 근거 대조가 꺼져 있습니다(NOTEBOOKLM_MODE=off). 기준 원문을 직접 읽고 판단하세요.';
+          } else if (!status.has_result) {
+            detailEvidenceRequest.disabled = true;
+            detailEvidenceGuidance.textContent = '2번 탭에서 판독 결과를 먼저 준비하세요. 결과가 생기면 근거를 볼 수 있습니다.';
+          } else if (status.stale) {
+            detailEvidenceRequest.disabled = true;
+            detailEvidenceGuidance.textContent = '2번 탭에서 다시 판독해 주세요. 이전 결과로는 근거를 확인할 수 없습니다.';
+          }
+        } catch (error) {
+          if (requestId !== evidenceReferenceRequestId) return;
+          detailStandardText.textContent = error.message || '서버에서 오류가 발생했습니다.';
+          detailEvidenceGuidance.textContent = error.message || '서버에서 오류가 발생했습니다.';
+        }
+      }
+
+      function renderEvidenceAnswer(query, link = null) {
+        detailEvidenceAnswerText.textContent = query.answer || '';
+        const sourceCount = Array.isArray(query.sources) ? query.sources.length : 0;
+        detailEvidenceSources.textContent = `인용한 소스 ${sourceCount}개`;
+        detailEvidenceMock.hidden = query.mode !== 'mock';
+        detailEvidenceSentQuestionText.textContent = query.question || '';
+        const prompt = evidencePromptRecords.find((item) => item.name === query.prompt_name);
+        const base = query.prompt_name?.match(/^v[1-3]/)?.[0] || 'v3';
+        detailEvidencePromptUsed.textContent = prompt?.custom
+          ? `사용한 근거 질문: ${base} · 저장한 수정본`
+          : `사용한 근거 질문: ${base} · 기본 원문`;
+        detailEvidenceSentQuestion.hidden = false;
+        detailEvidenceSentQuestion.open = false;
+        detailEvidenceReview.hidden = false;
+        detailEvidenceReviewError.hidden = true;
+        detailEvidenceReadMatch.checked = false;
+        detailEvidenceReviewNeeded.checked = false;
+        detailEvidenceReviewMemo.value = '';
+        evidenceLinkSaved = false;
+        detailEvidenceReviewSave.textContent = '출처 대조 기록 저장';
+        if (link?.query_id === query.query_id) {
+          const reviewNeeded = link.status === 'REVIEW_NEEDED_BY_USER' || link.status === 'MOCK_REVIEW_NEEDED';
+          detailEvidenceReadMatch.checked = true;
+          detailEvidenceReviewNeeded.checked = reviewNeeded;
+          detailEvidenceReviewMemo.value = link.memo || '';
+          evidenceLinkSaved = true;
+          detailEvidenceReviewSave.textContent = '기준 확인 기록 저장됨';
+        }
+        detailEvidenceReadMatch.disabled = evidenceLinkSaved;
+        detailEvidenceReviewNeeded.disabled = evidenceLinkSaved;
+        detailEvidenceReviewMemo.disabled = evidenceLinkSaved;
+        detailEvidenceReviewSave.disabled = evidenceLinkSaved || !detailEvidenceReadMatch.checked;
+        detailEvidenceAnswer.hidden = false;
+      }
+
+      function updateEvidenceReviewSaveButton() {
+        detailEvidenceReviewSave.disabled = evidenceLinkSaved || !detailEvidenceReadMatch.checked;
+      }
+
+      async function saveEvidenceReview() {
+        if (!activeDetailInspectionId || evidenceLinkSaved) return;
+        detailEvidenceReviewError.hidden = true;
+        detailEvidenceReviewSave.disabled = true;
+        try {
+          const response = await fetch(`/api/inspections/${encodeURIComponent(activeDetailInspectionId)}/evidence-link`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              verdict: detailEvidenceReviewNeeded.checked ? 'review' : 'match',
+              memo: detailEvidenceReviewMemo.value,
+            }),
+          });
+          const link = await response.json();
+          if (!response.ok) throw new Error(link.error || '출처 대조 기록을 저장하지 못했습니다.');
+          evidenceLinkSaved = true;
+          detailEvidenceReviewSave.textContent = '기준 확인 기록 저장됨';
+          detailEvidenceReadMatch.disabled = true;
+          detailEvidenceReviewNeeded.disabled = true;
+          detailEvidenceReviewMemo.disabled = true;
+          detailEvidenceReviewSave.disabled = true;
+          try {
+            await refreshGeminiBadge(activeDetailInspectionId);
+          } catch {
+            // The saved comparison remains successful even if the badge refresh fails.
+          }
+        } catch (error) {
+          detailEvidenceReviewError.textContent = error.message || '출처 대조 기록을 저장하지 못했습니다.';
+          detailEvidenceReviewError.hidden = false;
+          updateEvidenceReviewSaveButton();
+        }
+      }
+
+      async function refreshGeminiBadge(inspectionId) {
+        const response = await fetch(`/api/inspections/${encodeURIComponent(inspectionId)}/gemini`);
+        const status = await response.json();
+        if (response.ok && activeDetailInspectionId === inspectionId) updateGeminiBadge(status);
+      }
+
+      async function loadEvidencePrompts(inspectionId, selectedName = 'v3') {
+        const response = await fetch('/api/prompts?kind=notebooklm');
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '근거 질문을 불러오지 못했습니다.');
+        if (activeDetailInspectionId !== inspectionId) return;
+        evidencePromptRecords = result.prompts;
+        detailEvidencePrompt.replaceChildren(...evidencePromptRecords.map((prompt) => {
+          const option = document.createElement('option');
+          option.value = prompt.name;
+          option.textContent = prompt.name;
+          return option;
+        }));
+        detailEvidencePrompt.value = evidencePromptRecords.some((prompt) => prompt.name === selectedName)
+          ? selectedName
+          : result.default || 'v3';
+      }
+
+      async function askForEvidence(inspectionId) {
+        detailEvidenceRequest.disabled = true;
+        detailEvidenceGuidance.textContent = '';
+        detailEvidenceAnswerText.textContent = 'NotebookLM에서 검사기준을 찾는 중입니다.';
+        detailEvidenceMock.hidden = true;
+        detailEvidenceSources.textContent = '';
+        detailEvidenceAnswer.hidden = false;
+        detailEvidenceSentQuestion.hidden = true;
+        detailEvidenceReview.hidden = true;
+        try {
+          const response = await fetch(`/api/inspections/${encodeURIComponent(inspectionId)}/evidence`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: detailEvidencePrompt.value || 'v3' }),
+          });
+          const query = await response.json();
+          if (!response.ok) throw new Error(query.error || '근거 확인에 실패했습니다.');
+          if (activeDetailInspectionId !== inspectionId) return;
+          if (!evidencePromptRecords.some((prompt) => prompt.name === query.prompt_name)) {
+            await loadEvidencePrompts(inspectionId, query.prompt_name || 'v3');
+          }
+          if (activeDetailInspectionId !== inspectionId) return;
+          renderEvidenceAnswer(query);
+          detailEvidenceRequest.disabled = false;
+        } catch (error) {
+          detailEvidenceAnswer.hidden = true;
+          detailEvidenceGuidance.textContent = `근거 확인 실패: ${error.message || '서버에서 오류가 발생했습니다.'}`;
+          detailEvidenceRequest.disabled = false;
         }
       }
 
@@ -1179,17 +1938,7 @@
           renderGeminiComparison(status.results || []);
           detailGeminiRequest.textContent = hasResults ? 'AI 재판독 요청' : 'AI 판독 요청';
           detailGeminiRequest.disabled = status.state === 'running' || !detailGeminiOptionsReady;
-          const badge = status.state === 'running'
-            ? '판독 중'
-            : status.state === 'failed'
-              ? '판독 실패'
-              : !hasResults
-                ? '결과 없음'
-                : status.stale
-                  ? '다시 판독 필요'
-                  : '확인할 결과';
-          detailGeminiBadge.textContent = badge;
-          detailGeminiBadge.hidden = false;
+          updateGeminiBadge(status);
 
           detailGeminiStale.hidden = !status.stale;
           const latest = status.results?.[0];
@@ -1201,44 +1950,28 @@
             return;
           }
 
-          const fields = document.createElement('div');
-          fields.className = 'gemini-result-fields';
-
-          // 판정 카드
-          const decisionCard = document.createElement('div');
-          decisionCard.className = 'gemini-decision';
-          const decisionDt = document.createElement('dt');
-          decisionDt.textContent = '판정';
-          const decisionDd = document.createElement('dd');
-          const decisionVal = latest.result['판정'];
-          decisionDd.textContent = { OK: '정상', NG: '불량', HOLD: '보류' }[decisionVal] || decisionVal || '';
-          decisionCard.append(decisionDt, decisionDd);
-          fields.append(decisionCard);
-
-          // 관련 내용 카드 (불량유형, 관찰·수치 근거, 적용 기준과 출처, 권고 조치, 사람 승인 필요 여부 목록)
-          const detailsCard = document.createElement('div');
-          detailsCard.className = 'gemini-details-card';
-          const detailsList = document.createElement('dl');
-          const detailLabels = [
+          const labels = [
+            ['판정', latest.result['판정']],
             ['불량유형', latest.result['불량유형']],
             ['관찰·수치 근거', latest.result['관찰·수치 근거']],
             ['적용 기준과 출처', latest.result['적용 기준과 출처']],
             ['권고 조치', latest.result['권고 조치']],
             ['사람 승인 필요 여부', latest.result['사람 승인 필요 여부']],
           ];
-          detailLabels.forEach(([label, value]) => {
-            const item = document.createElement('div');
-            item.className = 'detail-item';
-            const dt = document.createElement('dt');
-            dt.textContent = label;
-            const dd = document.createElement('dd');
-            dd.textContent = value || '';
-            item.append(dt, dd);
-            detailsList.append(item);
+          const fields = document.createElement('dl');
+          fields.className = 'gemini-result-fields';
+          labels.forEach(([label, value], index) => {
+            const row = document.createElement('div');
+            if (index === 0) row.classList.add('gemini-decision');
+            const term = document.createElement('dt');
+            term.textContent = label;
+            const description = document.createElement('dd');
+            description.textContent = label === '판정'
+              ? ({ OK: '정상', NG: '불량', HOLD: '보류' }[value] || value)
+              : value;
+            row.append(term, description);
+            fields.append(row);
           });
-          detailsCard.append(detailsList);
-          fields.append(detailsCard);
-
           detailGeminiFields.replaceChildren(fields);
         } catch (error) {
           if (requestId !== geminiResultRequestId) return;
@@ -1246,6 +1979,25 @@
           detailGeminiState.textContent = error.message || '판독 결과를 불러오지 못했습니다.';
           detailGeminiState.hidden = false;
         }
+      }
+
+      function updateGeminiBadge(status) {
+        const hasResults = Array.isArray(status.results) && status.results.length > 0;
+        const reviewNeeded = status.link?.status === 'REVIEW_NEEDED_BY_USER' || status.link?.status === 'MOCK_REVIEW_NEEDED';
+        const badge = status.state === 'running'
+          ? '판독 중'
+          : status.state === 'failed'
+            ? '판독 실패'
+            : !hasResults
+              ? '결과 없음'
+              : status.stale
+                ? '다시 판독 필요'
+                : reviewNeeded
+                  ? '검토 필요'
+                  : '확인할 결과';
+        detailGeminiBadge.textContent = badge;
+        detailGeminiBadge.classList.toggle('review-needed', badge === '검토 필요');
+        detailGeminiBadge.hidden = false;
       }
 
       async function loadDetailPromptOptions(inspectionId) {
@@ -1311,6 +2063,8 @@
         }
         renderGeminiComparisonTable();
       });
+
+      let detailGeminiComparisonResults = [];
 
       function renderGeminiComparison(results) {
         if (!Array.isArray(results) || results.length < 2) {
@@ -1522,12 +2276,86 @@
         if (isSettings) {
           loadStorageStatus();
           loadPrompts();
+          loadNotebookLMPrompts();
         }
         if (isNewInspection) loadInspectionFields();
         if (isDetail) loadInspectionDetail(route);
       }
 
       detailTabs.forEach((tab, index) => tab.addEventListener('click', () => selectDetailTab(index)));
+
+      function renderJudgmentSelection(inspection) {
+        selectedJudgment = ['OK', 'NG', 'HOLD'].includes(inspection.decision) ? inspection.decision : null;
+        selectedDefects.clear();
+        (Array.isArray(inspection.defects) ? inspection.defects : []).forEach((defect) => {
+          if (defect?.defect_code) selectedDefects.add(defect.defect_code);
+        });
+        updateJudgmentButtonStates();
+      }
+
+      function updateJudgmentButtonStates() {
+        judgmentDecisionButtons.forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.judgment === selectedJudgment));
+        });
+        judgmentDefectButtons.forEach((button) => {
+          button.setAttribute('aria-pressed', String(selectedDefects.has(button.dataset.defect)));
+        });
+      }
+
+      judgmentDecisionButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          selectedJudgment = button.dataset.judgment;
+          updateJudgmentButtonStates();
+        });
+      });
+
+      judgmentDefectButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const defectCode = button.dataset.defect;
+          if (selectedDefects.has(defectCode)) selectedDefects.delete(defectCode);
+          else selectedDefects.add(defectCode);
+          updateJudgmentButtonStates();
+        });
+      });
+
+      detailJudgmentSave.addEventListener('click', () => void saveInspectionJudgment());
+
+      async function saveInspectionJudgment() {
+        if (!activeDetailInspectionId) return;
+        const inspectionId = activeDetailInspectionId;
+        detailJudgmentSave.disabled = true;
+        detailJudgmentSaveError.hidden = true;
+        try {
+          const response = await fetch(
+            `/api/inspections/${encodeURIComponent(inspectionId)}/records`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                decision: selectedJudgment,
+                defects: [...selectedDefects],
+                memo: detailJudgmentMemo.value,
+                change_reason: detailJudgmentChangeReason.value,
+              }),
+            },
+          );
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || '판단을 저장하지 못했습니다.');
+          await loadInspectionDetail(`/inspections/${encodeURIComponent(inspectionId)}`);
+        } catch (error) {
+          detailJudgmentSaveError.textContent = error.message || '판단을 저장하지 못했습니다.';
+          detailJudgmentSaveError.hidden = false;
+        } finally {
+          detailJudgmentSave.disabled = false;
+        }
+      }
+
+      detailEvidenceRequest.addEventListener('click', () => {
+        if (activeDetailInspectionId) void askForEvidence(activeDetailInspectionId);
+      });
+      detailEvidenceReadMatch.addEventListener('change', updateEvidenceReviewSaveButton);
+      detailEvidenceReviewNeeded.addEventListener('change', updateEvidenceReviewSaveButton);
+      detailEvidenceReviewSave.addEventListener('click', () => void saveEvidenceReview());
 
       function showApp(user) {
         loginBox.hidden = true;

@@ -19,7 +19,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
     }
 
     let status = 500;
-    let message = '\uC11C\uBC84\uC5D0\uC11C \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.';
+    let message = '서버에서 오류가 발생했습니다.';
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();

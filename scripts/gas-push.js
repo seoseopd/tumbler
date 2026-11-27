@@ -16,9 +16,9 @@ const output = `${result.stdout ?? ''}${result.stderr ?? ''}`;
 if (output.includes('Pushed') || output.includes('Script is already up to date')) {
   if (result.stdout) process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);
-  console.log('\uADF8\uAE00\uC5D0 \uCF54\uB4DC\uB97C \uC62C\uB838\uC2B5\uB2C8\uB2E4.');
+  console.log('Google에 코드를 올렸습니다.');
 } else if (output.includes('invalid_grant')) {
-  console.error('\uAD6C\uAE00 \uB85C\uADF8\uC778\uC774 \uB9CC\uB8CC\uB410\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4. npm.cmd run gas:login\uC744 \uB2E4\uC2DC \uD558\uC138\uC694.');
+  console.error('구글 로그인이 만료됐을 수 있습니다. npm.cmd run gas:login을 다시 하세요.');
   process.exitCode = 1;
 } else {
   if (result.stdout) process.stdout.write(result.stdout);

@@ -20,16 +20,15 @@ export class AuthController {
     @Body() credentials: { username?: unknown; password?: unknown },
     @Req() request: Request,
   ): { user: AuthUser } | { error: string } {
-    const suppliedUsername = credentials?.username;
+    const username = credentials?.username;
     const password = credentials?.password;
-    const username = typeof suppliedUsername === 'string' ? suppliedUsername : undefined;
-    const account = username ? accounts[username] : undefined;
+    const account = typeof username === 'string' ? accounts[username] : undefined;
 
-    if (!username || !account || account.password !== password) {
-      return { error: '\uB85C\uADF8\uC778 \uC815\uBCF4\uB97C \uD655\uC778\uD558\uC138\uC694.' };
+    if (!account || account.password !== password) {
+      return { error: '로그인 정보를 확인하세요.' };
     }
 
-    const user: AuthUser = { username, role: username };
+    const user = { username: username as string, role: username as string };
     request.session.user = user;
     return { user };
   }
@@ -42,7 +41,6 @@ export class AuthController {
         else resolve();
       });
     });
-
     return { user: null };
   }
 }

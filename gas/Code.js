@@ -17,6 +17,12 @@ function doPost(event) {
       else if (request.action === 'getPhoto') data = getPhoto(request.id);
       else if (request.action === 'saveGeminiResult') data = saveGeminiResult(spreadsheet, request.record);
       else if (request.action === 'listGeminiResults') data = listGeminiResults(spreadsheet, request.inspection_id);
+      else if (request.action === 'saveInspectionRecord') data = saveInspectionRecord(spreadsheet, request.record, request.defects);
+      else if (request.action === 'listInspectionRecords') data = listInspectionRecords(spreadsheet, request.inspection_id);
+      else if (request.action === 'saveEvidenceQuery') data = saveEvidenceQuery(spreadsheet, request.record);
+      else if (request.action === 'listEvidenceQueries') data = listEvidenceQueries(spreadsheet, request.inspection_id);
+      else if (request.action === 'saveEvidenceLink') data = saveEvidenceLink(spreadsheet, request.record);
+      else if (request.action === 'listEvidenceLinks') data = listEvidenceLinks(spreadsheet, request.inspection_id);
       else if (request.action === 'runGemini') data = runGemini(request);
       else if (request.action === 'setOnePortKey') data = setOnePortKey(request.key);
       else throw new Error('지원하지 않는 일입니다.');
@@ -46,6 +52,18 @@ function setupStorage() {
     'content_version',
   ]);
   ensureSheetHeaders(spreadsheet, 'images', ['inspection_id', 'position', 'image_url']);
+  ensureSheetHeaders(spreadsheet, 'inspection_records', [
+    'record_id',
+    'inspection_id',
+    'user_id',
+    'recorded_at',
+    'decision',
+    'weight_g',
+    'notes',
+    'content_version',
+    'change_reason',
+  ]);
+  ensureSheetHeaders(spreadsheet, 'record_defects', ['record_id', 'defect_code']);
   ensureSheetHeaders(spreadsheet, 'gemini_results', [
     'result_id',
     'inspection_id',
@@ -58,6 +76,28 @@ function setupStorage() {
     'weight_g',
     'images',
     'result',
+  ]);
+  ensureSheetHeaders(spreadsheet, 'evidence_queries', [
+    'query_id',
+    'inspection_id',
+    'draft_id',
+    'created_at',
+    'mode',
+    'revision',
+    'prompt_name',
+    'question',
+    'answer',
+    'sources',
+  ]);
+  ensureSheetHeaders(spreadsheet, 'evidence_links', [
+    'link_id',
+    'query_id',
+    'inspection_id',
+    'draft_id',
+    'status',
+    'memo',
+    'user',
+    'created_at',
   ]);
   removeEmptyDefaultSheet(spreadsheet);
 
@@ -180,91 +220,6 @@ function appendRows(spreadsheet, rowsByTab) {
   return { added: added };
 }
 
-function updateRow(spreadsheet, request) {
-  const sheet = spreadsheet.getSheetByName(request.tab);
-  if (!sheet || !request || typeof request.key !== 'string' || !request.changes || typeof request.changes !== 'object') {
-    throw new Error('수정할 기록이 없습니다.');
-  }
-
-  const headers = getSheetHeaders(sheet);
-  const keyColumn = headers.indexOf(request.key);
-  if (keyColumn < 0 || sheet.getLastRow() < 2) throw createUserError('수정할 기록이 없습니다.');
-
-  const keyValues = sheet.getRange(2, keyColumn + 1, sheet.getLastRow() - 1, 1).getValues();
-  const matchIndex = keyValues.findIndex((row) => valuesEqual(readCellValue(row[0]), request.value));
-  if (matchIndex < 0) throw createUserError('수정할 기록이 없습니다.');
-
-  const rowNumber = matchIndex + 2;
-  Object.keys(request.changes).forEach((header) => {
-    const column = headers.indexOf(header);
-    if (column >= 0) sheet.getRange(rowNumber, column + 1).setValue(toSheetValue(request.changes[header]));
-  });
-  return { updated: 1 };
-}
-
-function getSheetHeaders(sheet) {
-  const lastColumn = sheet.getLastColumn();
-  if (lastColumn === 0) return [];
-  return sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
-}
-
-function toSheetValue(value) {
-  if (value === null || value === undefined || value === '') return '';
-  if (typeof value === 'number') return value;
-  return "'" + String(value);
-}
-
-function readCellValue(value) {
-  if (value instanceof Date) return Utilities.formatDate(value, 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
-  if (typeof value === 'string' && value.charAt(0) === "'") return value.slice(1);
-  return value;
-}
-
-function valuesEqual(left, right) {
-  if (left instanceof Date) left = readCellValue(left);
-  if (right instanceof Date) right = readCellValue(right);
-  return left === right;
-}
-
-function savePhoto(request) {
-  if (typeof request.name !== 'string' || typeof request.mimeType !== 'string' || typeof request.base64 !== 'string') {
-    throw new Error('사진 정보를 확인하세요.');
-  }
-
-  const properties = PropertiesService.getScriptProperties();
-  const folder = DriveApp.getFolderById(properties.getProperty('FOLDER_ID'));
-  const bytes = Utilities.base64Decode(request.base64);
-  const blob = Utilities.newBlob(bytes, request.mimeType, request.name);
-  const file = folder.createFile(blob);
-  return { id: file.getId() };
-}
-
-function getPhoto(fileId) {
-  if (typeof fileId !== 'string' || fileId === '') {
-    throw createUserError('등록된 사진이 없습니다.');
-  }
-
-  const properties = PropertiesService.getScriptProperties();
-  const folder = DriveApp.getFolderById(properties.getProperty('FOLDER_ID'));
-  const files = folder.getFiles();
-  while (files.hasNext()) {
-    const file = files.next();
-    if (file.getId() === fileId) {
-      return {
-        mimeType: file.getMimeType(),
-        base64: Utilities.base64Encode(file.getBlob().getBytes()),
-      };
-    }
-  }
-  throw createUserError('등록된 사진이 없습니다.');
-}
-
-function createUserError(message) {
-  const error = new Error(message);
-  error.userMessage = message;
-  return error;
-}
-
 function saveGeminiResult(spreadsheet, record) {
   if (!record || typeof record !== 'object' || Array.isArray(record)) {
     throw createUserError('판독 결과를 확인하세요.');
@@ -299,6 +254,123 @@ function listGeminiResults(spreadsheet, inspectionId) {
       result: parseGeminiJsonCell(row.result, {}),
     }));
   return { results: rows };
+}
+
+function saveInspectionRecord(spreadsheet, record, defects) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    throw createUserError('판단을 확인하세요.');
+  }
+  if (
+    typeof record.record_id !== 'string' ||
+    typeof record.inspection_id !== 'string' ||
+    typeof record.user_id !== 'string' ||
+    typeof record.recorded_at !== 'string' ||
+    !['OK', 'NG', 'HOLD'].includes(record.decision) ||
+    (record.weight_g !== null && typeof record.weight_g !== 'number') ||
+    typeof record.notes !== 'string' ||
+    typeof record.content_version !== 'number' ||
+    typeof record.change_reason !== 'string'
+  ) {
+    throw createUserError('판단을 확인하세요.');
+  }
+  if (!Array.isArray(defects) || defects.some((code) => !['D01', 'D02', 'D03', 'D04'].includes(code))) {
+    throw createUserError('불량을 확인하세요.');
+  }
+
+  const inspectionSheet = spreadsheet.getSheetByName('inspections');
+  if (!inspectionSheet) throw createUserError('검사를 찾을 수 없습니다.');
+  const inspectionRows = readSheetRows(inspectionSheet);
+  if (!inspectionRows.some((row) => row.inspection_id === record.inspection_id)) {
+    throw createUserError('검사를 찾을 수 없습니다.');
+  }
+
+  appendRows(spreadsheet, {
+    inspection_records: [record],
+    record_defects: defects.map((defect_code) => ({
+      record_id: record.record_id,
+      defect_code: defect_code,
+    })),
+  });
+  updateRow(spreadsheet, {
+    tab: 'inspections',
+    key: 'inspection_id',
+    value: record.inspection_id,
+    changes: { content_version: record.content_version },
+  });
+  return { saved: 1 };
+}
+
+function listInspectionRecords(spreadsheet, inspectionId) {
+  if (inspectionId !== undefined && typeof inspectionId !== 'string') {
+    throw createUserError('검사번호를 확인하세요.');
+  }
+  const recordSheet = spreadsheet.getSheetByName('inspection_records');
+  const defectSheet = spreadsheet.getSheetByName('record_defects');
+  const records = recordSheet
+    ? readSheetRows(recordSheet)
+      .filter((row) => inspectionId === undefined || row.inspection_id === inspectionId)
+      .map((row) => ({
+        ...row,
+        weight_g: row.weight_g === '' || row.weight_g === null ? null : Number(row.weight_g),
+        notes: row.notes === '' || row.notes === null ? '' : String(row.notes),
+        change_reason: row.change_reason === '' || row.change_reason === null ? '' : String(row.change_reason),
+        content_version: Number(row.content_version) || 0,
+      }))
+    : [];
+  const recordIds = new Set(records.map((record) => record.record_id));
+  const defects = defectSheet
+    ? readSheetRows(defectSheet).filter((row) => recordIds.has(row.record_id))
+    : [];
+  return { records: records, defects: defects };
+}
+
+function saveEvidenceQuery(spreadsheet, record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    throw createUserError('근거 답을 확인하세요.');
+  }
+  if (typeof record.sources !== 'string') {
+    throw createUserError('근거 답의 출처는 JSON 글이어야 합니다.');
+  }
+  try {
+    JSON.parse(record.sources);
+  } catch (error) {
+    throw createUserError('근거 답의 출처를 읽을 수 없습니다.');
+  }
+  const appended = appendRows(spreadsheet, { evidence_queries: [record] });
+  return { saved: appended.added };
+}
+
+function listEvidenceQueries(spreadsheet, inspectionId) {
+  if (inspectionId !== undefined && typeof inspectionId !== 'string') {
+    throw createUserError('검사번호를 확인하세요.');
+  }
+  const sheet = spreadsheet.getSheetByName('evidence_queries');
+  if (!sheet) return { queries: [] };
+
+  const queries = readSheetRows(sheet)
+    .filter((row) => inspectionId === undefined || row.inspection_id === inspectionId)
+    .map((row) => ({ ...row, sources: parseGeminiJsonCell(row.sources, []) }));
+  return { queries: queries };
+}
+
+function saveEvidenceLink(spreadsheet, record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    throw createUserError('대조 기록을 확인하세요.');
+  }
+  const appended = appendRows(spreadsheet, { evidence_links: [record] });
+  return { saved: appended.added };
+}
+
+function listEvidenceLinks(spreadsheet, inspectionId) {
+  if (inspectionId !== undefined && typeof inspectionId !== 'string') {
+    throw createUserError('검사번호를 확인하세요.');
+  }
+  const sheet = spreadsheet.getSheetByName('evidence_links');
+  if (!sheet) return { links: [] };
+
+  const links = readSheetRows(sheet)
+    .filter((row) => inspectionId === undefined || row.inspection_id === inspectionId);
+  return { links: links };
 }
 
 function parseGeminiJsonCell(value, fallback) {
@@ -459,6 +531,91 @@ function sanitizeOnePortText(value, apiKey) {
   let text = String(value);
   if (apiKey) text = text.split(apiKey).join('[가림]');
   return text.replace(/Bearer\s+[^\s"'`,}]+/gi, 'Bearer [가림]');
+}
+
+function updateRow(spreadsheet, request) {
+  const sheet = spreadsheet.getSheetByName(request.tab);
+  if (!sheet || !request || typeof request.key !== 'string' || !request.changes || typeof request.changes !== 'object') {
+    throw new Error('수정할 기록이 없습니다.');
+  }
+
+  const headers = getSheetHeaders(sheet);
+  const keyColumn = headers.indexOf(request.key);
+  if (keyColumn < 0 || sheet.getLastRow() < 2) throw createUserError('수정할 기록이 없습니다.');
+
+  const keyValues = sheet.getRange(2, keyColumn + 1, sheet.getLastRow() - 1, 1).getValues();
+  const matchIndex = keyValues.findIndex((row) => valuesEqual(readCellValue(row[0]), request.value));
+  if (matchIndex < 0) throw createUserError('수정할 기록이 없습니다.');
+
+  const rowNumber = matchIndex + 2;
+  Object.keys(request.changes).forEach((header) => {
+    const column = headers.indexOf(header);
+    if (column >= 0) sheet.getRange(rowNumber, column + 1).setValue(toSheetValue(request.changes[header]));
+  });
+  return { updated: 1 };
+}
+
+function getSheetHeaders(sheet) {
+  const lastColumn = sheet.getLastColumn();
+  if (lastColumn === 0) return [];
+  return sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+}
+
+function toSheetValue(value) {
+  if (value === null || value === undefined || value === '') return '';
+  if (typeof value === 'number') return value;
+  return "'" + String(value);
+}
+
+function readCellValue(value) {
+  if (value instanceof Date) return Utilities.formatDate(value, 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
+  if (typeof value === 'string' && value.charAt(0) === "'") return value.slice(1);
+  return value;
+}
+
+function valuesEqual(left, right) {
+  if (left instanceof Date) left = readCellValue(left);
+  if (right instanceof Date) right = readCellValue(right);
+  return left === right;
+}
+
+function createUserError(message) {
+  const error = new Error(message);
+  error.userMessage = message;
+  return error;
+}
+
+function savePhoto(request) {
+  if (typeof request.name !== 'string' || typeof request.mimeType !== 'string' || typeof request.base64 !== 'string') {
+    throw new Error('사진 정보를 확인하세요.');
+  }
+
+  const properties = PropertiesService.getScriptProperties();
+  const folder = DriveApp.getFolderById(properties.getProperty('FOLDER_ID'));
+  const bytes = Utilities.base64Decode(request.base64);
+  const blob = Utilities.newBlob(bytes, request.mimeType, request.name);
+  const file = folder.createFile(blob);
+  return { id: file.getId() };
+}
+
+function getPhoto(fileId) {
+  if (typeof fileId !== 'string' || fileId === '') {
+    throw createUserError('등록된 사진이 없습니다.');
+  }
+
+  const properties = PropertiesService.getScriptProperties();
+  const folder = DriveApp.getFolderById(properties.getProperty('FOLDER_ID'));
+  const files = folder.getFiles();
+  while (files.hasNext()) {
+    const file = files.next();
+    if (file.getId() === fileId) {
+      return {
+        mimeType: file.getMimeType(),
+        base64: Utilities.base64Encode(file.getBlob().getBytes()),
+      };
+    }
+  }
+  throw createUserError('등록된 사진이 없습니다.');
 }
 
 function jsonOutput(value) {
